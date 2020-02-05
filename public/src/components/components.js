@@ -35,28 +35,22 @@ function getToDoes() {
 }
 
 function editToDo(id) {
-    console.log(id)
-    console.log(this)
     let editInputFieldWrapper = document.querySelector(`.edit-wrapper-${id}`);
     let editInputField = document.querySelector(`.edit-wrapper-${id} > input`);
     let saveBtn = document.querySelector(`.edit-wrapper-${id} > button`);
     let editToDoElem = document.querySelector(`span.title-${id}`);
     let editToDoText = editToDoElem.innerHTML.toString();
-    console.log(editInputField);
     editInputField.setAttribute("value", `${editToDoText}`);
     editInputFieldWrapper.style.display = "block";
     saveBtn.addEventListener("click", function (e) {
         e.preventDefault();
         let text = editInputField.value;
-        console.log(text)
         updateToDo(id, text)
     })
 
 }
 
 function updateToDo(id, text) {
-    console.log(id)
-    console.log(text)
     const toDosUrl = `/api/todos/${id}`;
     const putMethod = {
         method: 'PUT', // Method itself
@@ -72,15 +66,12 @@ function updateToDo(id, text) {
             let editInputFieldWrapper = document.querySelector(`.edit-wrapper-${data.id}`);
             let editToDoElem = document.querySelector(`span.title-${data.id}`);
             editToDoElem.innerHTML = data.title;
-            console.log("wrapp", editInputFieldWrapper)
             editInputFieldWrapper.style.display = "none";
-            console.log(data)
         })
         .catch(err => console.log(err))
 }
 
 function reRenderToDos(data) {
-    console.log(data)
     const todosListWrapper = document.querySelector(".list_wrapper");
     todosListWrapper.innerHTML = "";
     todosListWrapper.innerHTML = li(data);
@@ -187,7 +178,6 @@ function createAddBtn() {
                     removeToDos();
                     wrapper();
                     getToDoes();
-                    console.log(data)
                 })
                 .catch(error => console.error(error.message));
         }

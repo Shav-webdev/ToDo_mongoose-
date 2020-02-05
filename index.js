@@ -1,5 +1,5 @@
 const express = require("express");
-// const methodOverride = require("method-override");
+const mongoose = require('mongoose');
 const homeRoute = require("./routes/home");
 const toDoRouter = require("./api/todos/index");
 let toDos = require('./api/todos/todos');
@@ -9,19 +9,34 @@ const jsonParser = bodyParser.json();
 const PORT = 3001;
 const app = express();
 
-// app.use(methodOverride("_method"));
+mongoose.connect("mongodb://localhost:27017/ToDos", {
+    useUnifiedTopology: true,
+    useNewUrlParser: true
+})
+    .then(() => console.log("Mongo db started"))
+    .catch(e => console.log(e))
 
+require('./ToDo.model');
 
-app.use(express.static( __dirname + "/public"));
-app.use(express.static( __dirname + "/src"));
-app.use(express.static( __dirname + "/api"));
-app.use(express.static( __dirname + "/ToDo"));
+const ToDo = mongoose.model("ToDos");
+
+const todo1 = new ToDo({
+    title: "to do something",
+    id: 145,
+});
+
+todo1.save().then(todo => console.log(todo)).catch(e => console.log(e))
+
+app.use(express.static(__dirname + "/public"));
+app.use(express.static(__dirname + "/src"));
+app.use(express.static(__dirname + "/api"));
+app.use(express.static(__dirname + "/ToDo"));
 
 app.use("/", homeRoute);
 app.use("/api/todos", toDoRouter);
 
 
-app.delete("/api/todos/:id", function(req, res) {
+app.delete("/api/todos/:id", function (req, res) {
     let id = parseInt(req.params.id, 10);
     toDos = toDos.filter(el => el.id !== id);
     res.json(toDos);
