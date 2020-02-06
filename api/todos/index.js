@@ -10,32 +10,40 @@ require('../../models/ToDo.model');
 const ToDo = mongoose.model("ToDos");
 
 
+let id = 0;
+ToDo
+    .find()
+    .sort({id: -1})
+    .limit(1)
+    .then(data => {
+        if (data[0].id) {
+            id = data[0].id + 1;
+            return id;
+        } else {
+            id = 1;
+            return id;
+        }
+    })
+    .catch(e => console.log(e))
+
+
 router.get("/", (req, res) => {
     ToDo
         .find({})
         .then(data => {
-            console.log(data);
             res.json(data);
         })
         .catch(e => console.log(e))
-
 });
 
 router.post('/', jsonParser, function (req, res) {
-    let id = toDos.length;
-
     if (req.body.toDo.toString().length) {
-        toDos.push({
-            id: ++id,
-            title: req.body.toDo
-        });
         const todo = new ToDo({
             title: req.body.toDo,
             id: id,
         });
         todo.save()
             .then(todo => {
-                console.log(todo);
                 res.send(`200`, {data: `data successfully created`});
             })
             .catch(e => {

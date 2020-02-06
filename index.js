@@ -34,7 +34,20 @@ app.use("/api/todos", toDoRouter);
 app.delete("/api/todos/:id", function (req, res) {
     let id = parseInt(req.params.id, 10);
     toDos = toDos.filter(el => el.id !== id);
-    res.json(toDos);
+
+    ToDo
+        .find({id: id})
+        .then(data => {
+            ToDo
+                .find(data)
+                .remove()
+                .then(_ => "Removed successfully !!!")
+                .catch(e => console.log(e))
+            console.log(data);
+
+            res.json(ToDo.find({}));
+        })
+        .catch(e => console.log(e))
 });
 
 app.put('/api/todos/:id', jsonParser, function (req, res) {
