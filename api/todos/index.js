@@ -11,8 +11,14 @@ const ToDo = mongoose.model("ToDos");
 
 
 router.get("/", (req, res) => {
-    console.log(toDos);
-    res.json(toDos);
+    ToDo
+        .find({})
+        .then(data => {
+            console.log(data);
+            res.json(data);
+        })
+        .catch(e => console.log(e))
+
 });
 
 router.post('/', jsonParser, function (req, res) {
