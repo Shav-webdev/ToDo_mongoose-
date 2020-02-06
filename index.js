@@ -1,5 +1,5 @@
 const express = require("express");
-const mongoose = require('mongoose');
+const mongoose = require('./mongoose/mongoose');
 const homeRoute = require("./routes/home");
 const toDoRouter = require("./api/todos/index");
 let toDos = require('./api/todos/todos');
@@ -9,23 +9,18 @@ const jsonParser = bodyParser.json();
 const PORT = 3001;
 const app = express();
 
-mongoose.connect("mongodb://localhost:27017/ToDos", {
-    useUnifiedTopology: true,
-    useNewUrlParser: true
-})
-    .then(() => console.log("Mongo db started"))
-    .catch(e => console.log(e))
 
-require('./ToDo.model');
+
+require('./models/ToDo.model');
 
 const ToDo = mongoose.model("ToDos");
 
-const todo1 = new ToDo({
-    title: "to do something",
-    id: 145,
-});
+// const todo1 = new ToDo({
+//     title: "to do something",
+//     id: 145,
+// });
 
-todo1.save().then(todo => console.log(todo)).catch(e => console.log(e))
+// todo1.save().then(todo => console.log(todo)).catch(e => console.log(e))
 
 app.use(express.static(__dirname + "/public"));
 app.use(express.static(__dirname + "/src"));
@@ -55,21 +50,8 @@ app.put('/api/todos/:id', jsonParser, function (req, res) {
     console.log(toDos);
     res.json({id: id, title: title});
     console.log("put body", req.body.title)
-
-
 });
 
-
-// app.get("/edit/:id", (req, res, next) => {
-//     let toDo = globalStorage.filter((el) => {
-//         return el.id === Number(req.params.id);
-//     });
-//     let id = toDo[0].id;
-//     let title = toDo[0].title;
-//     const data = { id: id, title: title };
-//     res.render("edit", { toDo: data });
-//     next();
-// });
 
 app.listen(PORT, (err) => {
     if (err) {

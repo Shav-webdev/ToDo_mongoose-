@@ -1,7 +1,6 @@
 const {Router} = require('express');
 const router = Router();
 const path = require("path");
-const fs = require("fs");
 
 /**
  * router for home page*/
